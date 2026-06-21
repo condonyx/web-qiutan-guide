@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>球探 · 赛事导航与数据对照</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #f5f9fc;
+      color: #1e2b3a;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: #0f7b7b;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    a:hover {
+      color: #0b5f5f;
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ---- 顶部导航 ---- */
+    .nav {
+      background: #ffffff;
+      border-bottom: 2px solid #d0e8e8;
+      padding: 14px 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(4px);
+      background: rgba(255,255,255,0.92);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .nav-logo {
+      font-weight: 600;
+      font-size: 1.4rem;
+      letter-spacing: 1px;
+      color: #0a4f4f;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a {
+      color: #1e3a3a;
+      padding: 6px 0;
+      border-bottom: 2px solid transparent;
+    }
+
+    .nav-links a:hover {
+      border-bottom-color: #0f7b7b;
+      color: #0a4f4f;
+    }
+
+    /* ---- hero ---- */
+    .hero {
+      background: linear-gradient(145deg, #e4f2f2 0%, #cde3e3 100%);
+      border-radius: 24px;
+      padding: 48px 40px;
+      margin: 36px 0 20px;
+      box-shadow: 0 6px 14px rgba(0,60,60,0.06);
+    }
+
+    .hero h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: #0b3a3a;
+      line-height: 1.2;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      max-width: 680px;
+      color: #1d3d3d;
+    }
+
+    .hero .highlight-link {
+      display: inline-block;
+      margin-top: 20px;
+      background: #0f7b7b;
+      color: white;
+      padding: 10px 28px;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 1rem;
+      box-shadow: 0 4px 8px rgba(15,123,123,0.2);
+    }
+
+    .hero .highlight-link:hover {
+      background: #0b5f5f;
+      color: white;
+      text-decoration: none;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(15,123,123,0.25);
+    }
+
+    /* ---- 场景网格卡片 ---- */
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #0a4f4f;
+      margin: 44px 0 20px;
+      border-left: 6px solid #0f7b7b;
+      padding-left: 18px;
+    }
+
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 28px 22px 32px;
+      box-shadow: 0 4px 12px rgba(0,50,50,0.04);
+      border: 1px solid #dcecec;
+      transition: 0.2s;
+    }
+
+    .card:hover {
+      border-color: #aad0d0;
+      box-shadow: 0 6px 18px rgba(0,70,70,0.06);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #104242;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: #2a4444;
+      margin-bottom: 12px;
+    }
+
+    .card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .card li {
+      font-size: 0.9rem;
+      padding: 4px 0 4px 20px;
+      position: relative;
+      color: #1d3d3d;
+    }
+
+    .card li::before {
+      content: "•";
+      color: #0f7b7b;
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+    }
+
+    /* ---- 常见说明 (FAQ 摘要) ---- */
+    .faq-section {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 32px 36px;
+      margin: 30px 0 50px;
+      border: 1px solid #d8eaea;
+    }
+
+    .faq-section h2 {
+      font-size: 1.5rem;
+      color: #0a4f4f;
+      margin-bottom: 20px;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid #e1efef;
+      padding: 18px 0;
+    }
+
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+
+    .faq-q {
+      font-weight: 600;
+      color: #133d3d;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .faq-a {
+      font-size: 0.95rem;
+      color: #2a4a4a;
+    }
+
+    .faq-a a {
+      font-weight: 500;
+    }
+
+    /* ---- footer ---- */
+    .footer {
+      margin-top: auto;
+      background: #e6f2f2;
+      padding: 28px 0;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #1f4848;
+      border-top: 1px solid #cde0e0;
+    }
+
+    .footer a {
+      color: #0a4f4f;
+    }
+
+    /* ---- 响应式 ---- */
+    @media (max-width: 860px) {
+      .scenario-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero {
+        padding: 36px 24px;
+      }
+
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .nav-inner {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .nav-links {
+        gap: 18px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .scenario-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .hero h1 {
+        font-size: 1.6rem;
+      }
+
+      .faq-section {
+        padding: 24px 18px;
+      }
+
+      .hero .highlight-link {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .container {
+        padding: 0 12px;
+      }
+
+      .hero {
+        padding: 24px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <div class="nav-logo">⚡ 球探</div>
+    <div class="nav-links">
+      <a href="#scenarios">使用场景</a>
+      <a href="#faq">常见说明</a>
+      <a href="#info">关于</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+
+  <!-- hero -->
+  <section class="hero">
+    <h1>赛事数据 · 对照与延伸</h1>
+    <p>
+      从日常查询到深度比对，<a href="https://web-qiutan.com" style="color: #0a4f4f; text-decoration: underline;">球探</a>提供结构化的联赛信息与即时数据，帮助你在浏览过程中快速定位、横向参考。
+    </p>
+    <a href="https://web-qiutan.com" class="highlight-link">球探</a>
+  </section>
+
+  <!-- 三个场景模块 -->
+  <h2 class="section-title" id="scenarios">常用场景</h2>
+  <div class="scenario-grid">
+
+    <div class="card">
+      <span class="card-icon">📊</span>
+      <h3>日常查询</h3>
+      <p>快速检索赛程、积分、射手榜等基础数据，减少多页面跳转。搭配筛选与排序，专注关键信息。</p>
+      <ul>
+        <li>当前轮次与对阵</li>
+        <li>历史交锋记录</li>
+        <li>球队近期走势</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <span class="card-icon">⚖️</span>
+      <h3>横向对照</h3>
+      <p>将不同联赛、赛季或球队的数据并列展示，便于趋势对比和差异分析。适合赛前准备与复盘。</p>
+      <ul>
+        <li>主客场表现对比</li>
+        <li>进球/失球分布</li>
+        <li>控球率与效率</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <span class="card-icon">📚</span>
+      <h3>延伸阅读</h3>
+      <p>通过关联数据与注解，理解排名背后的细节。例如净胜球构成、关键球员贡献、战术倾向等。</p>
+      <ul>
+        <li>积分变化曲线</li>
+        <li>纪律统计 & 伤病</li>
+        <li>数据定义说明</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- 常见说明 (FAQ 摘要) -->
+  <section class="faq-section" id="faq">
+    <h2>常见说明</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">数据来源与更新频率？</div>
+      <div class="faq-a">
+        <a href="https://web-qiutan.com">球探</a>汇集多家数据源，赛程及实时比分在授权范围内尽量保持同步。具体字段的更新延迟因赛事级别而异，建议以页面标注时间为参考。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">如何理解「对照模式」？</div>
+      <div class="faq-a">
+        在任意球队或联赛页面中，可使用“对照”功能同时加载最多三组数据卡片，并排展示核心指标。该模式更适合桌面端浏览，移动端建议横屏使用。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">是否支持自定义筛选？</div>
+      <div class="faq-a">
+        支持。在积分榜、射手榜等模块中可按赛季、轮次、主客场等维度过滤。部分高级筛选（如特定时间区间）需登录后使用。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">移动端访问体验如何？</div>
+      <div class="faq-a">
+        页面已适配移动端，卡片及表格均采用响应式布局。若遇到显示拥挤，可尝试切换为“精简视图”（位于页面右上角菜单）。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">延伸阅读的数据注释在哪里查看？</div>
+      <div class="faq-a">
+        每个表格或卡片区域右上角带有 <strong>ⓘ</strong> 图标，点击后显示当前指标的统计口径与注意事项。部分复杂指标还配有简要示例。
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <p>数据仅供参考，以官方发布为准 · <a href="https://web-qiutan.com">球探</a> · 简洁 · 实用</p>
+  </div>
+</footer>
+
+</body>
+</html>
